@@ -1,4 +1,4 @@
-Thought for 1 second### Auth Service
+### Auth Service
 
 ## Overview
 
