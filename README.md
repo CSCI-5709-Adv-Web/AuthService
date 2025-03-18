@@ -82,7 +82,7 @@ npm run dev
 
 Key environment variables:
 
-```plaintext
+```env
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/auth-service
 JWT_SECRET=your_jwt_secret
