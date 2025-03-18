@@ -8,9 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
         <PackageReference Include="Duende.IdentityServer" Version="7.1.0" />
         <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.1.0" />
         <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.4.0" />
@@ -27,6 +29,10 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="src\Models\Dtos\" />
     </ItemGroup>
 
 </Project>

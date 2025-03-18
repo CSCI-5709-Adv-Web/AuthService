@@ -1,5 +1,5 @@
+using AuthService.Extensions;
 using Serilog;
-using AuthService.infrastructure.extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
