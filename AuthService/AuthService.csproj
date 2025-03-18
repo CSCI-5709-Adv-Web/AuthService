@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="src\Models\Dtos\" />
+      <Folder Include="Src\Models\Dtos\" />
     </ItemGroup>
 
 </Project>
