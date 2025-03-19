@@ -33,7 +33,7 @@ public static class ServiceExtensions
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = configuration.GetSection($"JwtSettings").GetValue<string>("Issuer"),
                     ValidAudience = configuration.GetSection("JwtSettings").GetValue<string>("Audience"),
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration.GetSection("JwtSettings").GetValue<string>("Secret"))),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration.GetSection("JwtSettings").GetValue<string>("Secret") ?? string.Empty)),
                 };
             });
         services.AddAuthorizationBuilder().AddPolicy("RequireAuthenticatedUser", policy => policy.RequireAuthenticatedUser());
