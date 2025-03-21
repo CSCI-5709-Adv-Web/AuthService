@@ -22,7 +22,7 @@ spec:
       volumes:
         - name: appsettings-volume
           configMap:
-            name: AuthService-Configmap  # The name of the ConfigMap created
+            name: authservice-configmap  # The name of the ConfigMap created
 ---
 apiVersion: v1
 kind: Service
