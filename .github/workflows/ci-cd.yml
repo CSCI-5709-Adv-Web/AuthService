@@ -39,7 +39,7 @@ jobs:
           aws eks --region us-east-1 update-kubeconfig --name ${{ secrets.AWS_CLUSTER_NAME }}
       - name: Create ConfigMap for appsettings.json
         run: |
-          kubectl create configmap AuthService-Configmap --from-file=appsettings.json=k8s/appsettings.json --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create configmap AuthService-Configmap --from-file=appsettings.json=AuthService/appsettings.json --dry-run=client -o yaml | kubectl apply -f -
       - name: Apply Kubernetes Resources
         run: |
           kubectl apply -f AuthService/k8s/AuthService-deployment.yaml
