@@ -44,6 +44,6 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 5087
+      targetPort: 8080
       name: http
   type: LoadBalancer
