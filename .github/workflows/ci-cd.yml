@@ -2,7 +2,7 @@ name: Auth Service CI/CD Pipeline
 on:
   push:
     branches:
-      - master # Runs pipeline when pushing to master
+      - main # Runs pipeline when pushing to master
 jobs:
   build-and-push:
     name: Build and Push Docker Image
