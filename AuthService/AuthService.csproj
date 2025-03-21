@@ -29,6 +29,7 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Include=".github\workflow\ci-cd.yaml" />
     </ItemGroup>
 
     <ItemGroup>
