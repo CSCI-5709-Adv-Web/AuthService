@@ -1,24 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-auth-service
+  name: auth-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web-auth-service
+      app: auth-api
   template:
     metadata:
       labels:
-        app: web-auth-service
+        app: auth-api
     spec:
       containers:
-        - name: web-auth-service
-          image: jashpatel1511/web-auth-service:latest
+        - name: auth-api
+          image: jashpatel1511/auth-api:latest
           volumeMounts:
             - name: appsettings-volume
               mountPath: /appsettings.json  # Mount path inside the container
               subPath: appsettings.json    # Name of the file inside the container
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
       volumes:
         - name: appsettings-volume
           configMap:
