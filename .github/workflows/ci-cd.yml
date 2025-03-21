@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build and Push Docker Image
         run: |
-          docker build -t jashpatel1511/web-auth-service:latest .
+          docker build -t jashpatel1511/web-auth-service:latest -f ./AuthService/Dockerfile .
           docker push jashpatel1511/web-auth-service:latest
   deploy:
     name: Deploy to EKS Cluster
