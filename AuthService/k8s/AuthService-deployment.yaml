@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth-api
-          image: jashpatel1511/auth-api:latest
+          image: jashpatel1511/web-auth-service:latest
           volumeMounts:
             - name: appsettings-volume
               mountPath: /appsettings.json  # Mount path inside the container
