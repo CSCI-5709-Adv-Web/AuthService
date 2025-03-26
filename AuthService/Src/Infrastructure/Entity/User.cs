@@ -14,5 +14,6 @@ namespace AuthService.Infrastructure.Entity
         public string? Address { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
+        public List<Card> Cards { get; set; } = new List<Card>();
     }
 }

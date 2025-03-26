@@ -7,13 +7,22 @@ namespace AuthService.Services
 {
     public interface IUserService
     {
+        // Authentication Methods
         Task<AuthApiResponse> RegisterUser(RegisterRequest request);
         Task<AuthApiResponse> LoginUser(LoginRequest request);
         Task<AuthApiResponse> RefreshToken(string refreshToken);
         Task<AuthApiResponse> LogoutUser(string email);
         Task<User> FindUserByEmail(string email);
-        Task<UserApiResponse> GetUserDetailsByEmailAsync(string email); // Get user details by email
-        Task<UserApiResponse> UpdateUserDetailsByEmailAsync(string email, UpdateUserRequest model); // Update user details by email
-        Task<UserApiResponse> DeleteUserByEmailAsync(string email); // Delete user by email
+
+        // User Management Methods
+        Task<UserApiResponse> GetUserDetailsByEmailAsync(string email);
+        Task<UserApiResponse> UpdateUserDetailsByEmailAsync(string email, UpdateUserRequest model);
+        Task<UserApiResponse> DeleteUserByEmailAsync(string email);
+
+        // Card Management Methods
+        Task<CardApiResponse> CreateUserCardAsync(string email, UpdateCardRequest cardRequest);
+        Task<CardApiResponse> UpdateUserCardAsync(string email, string cardId, UpdateCardRequest cardRequest);
+        Task<CardApiResponse> DeleteUserCardAsync(string email, string cardId);
+        Task<CardListApiResponse> GetUserCardsAsync(string email);
     }
 }

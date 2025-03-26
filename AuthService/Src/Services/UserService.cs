@@ -88,7 +88,7 @@ public class UserService(IUserRepository userRepository, IJwtService jwtService)
     public async Task<UserApiResponse> GetUserDetailsByEmailAsync(string email)
     {
         var user = await userRepository.GetUserByEmailAsync(email);
-        return user == null ? new UserApiResponse(404,false, "User not found.", null) : 
+        return user == null ? new UserApiResponse(404,false, $"User not found.", null) : 
             new UserApiResponse(200, true, "User details fetched successfully.", user);
     }
     
@@ -97,7 +97,7 @@ public class UserService(IUserRepository userRepository, IJwtService jwtService)
         var user = await userRepository.GetUserByEmailAsync(email);
         if (user == null)
         {
-            return new UserApiResponse(404,false, "User not found.", null);
+            return new UserApiResponse(404,false, $"User not found.", null);
         }
         if (!string.IsNullOrEmpty(model.Name))
             user.Name = model.Name;
@@ -119,8 +119,119 @@ public class UserService(IUserRepository userRepository, IJwtService jwtService)
             return new UserApiResponse(404,false, "User not found.", null);
         }
         var deleteSuccess = await userRepository.DeleteUserAsync(user.Email);
-        return !deleteSuccess ? new UserApiResponse(400,false, "Failed to delete user.", null) : 
-            new UserApiResponse(200, true, "User deleted successfully.", null);
+        return !deleteSuccess ? new UserApiResponse(400,false, "Failed to delete user.", null) 
+            : new UserApiResponse(200, true, "User deleted successfully.", null);
+    }
+    
+    public async Task<CardApiResponse> CreateUserCardAsync(string email, UpdateCardRequest cardRequest)
+    {
+        var user = await userRepository.GetUserByEmailAsync(email);
+        if (user == null)
+        {
+            return new CardApiResponse(404, false, "User not found.");
+        }
+        if (!ValidateCardDetails(cardRequest))
+        {
+            return new CardApiResponse(400, false, "Invalid card details.");
+        }
+        var newCard = new Card
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserId = user.Id,
+            CardNumber = cardRequest.CardNumber,
+            CardholderName = cardRequest.CardholderName,
+            ExpiryDate = cardRequest.ExpiryDate,
+            CVV = cardRequest.CVV,
+            IsDefault = cardRequest.IsDefault,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+        if (cardRequest.IsDefault)
+        {
+            await UnsetOtherDefaultCards(user.Id, newCard.Id);
+        }
+        user.Cards ??= new List<Card>();
+        user.Cards.Add(newCard);
+        await userRepository.UpdateUserAsync(user);
+        return new CardApiResponse(201, true, "Card added successfully.", newCard);
+    }
+
+    public async Task<CardApiResponse> UpdateUserCardAsync(string email, string cardId, UpdateCardRequest cardRequest)
+    {
+        var user = await userRepository.GetUserByEmailAsync(email);
+        if (user == null)
+        {
+            return new CardApiResponse(404, false, "User not found.");
+        }
+        var cardToUpdate = user.Cards?.FirstOrDefault(c => c.Id == cardId);
+        if (cardToUpdate == null)
+        {
+            return new CardApiResponse(404, false, "Card not found.");
+        }
+        if (!ValidateCardDetails(cardRequest))
+        {
+            return new CardApiResponse(400, false, "Invalid card details.");
+        }
+        cardToUpdate.CardNumber = cardRequest.CardNumber;
+        cardToUpdate.CardholderName = cardRequest.CardholderName;
+        cardToUpdate.ExpiryDate = cardRequest.ExpiryDate;
+        cardToUpdate.CVV = cardRequest.CVV;
+        cardToUpdate.UpdatedAt = DateTime.UtcNow;
+        if (cardRequest.IsDefault)
+        {
+            await UnsetOtherDefaultCards(user.Id, cardId);
+            cardToUpdate.IsDefault = true;
+        }
+        await userRepository.UpdateUserAsync(user);
+        return new CardApiResponse(200, true, "Card updated successfully.", cardToUpdate);
+    }
+
+    public async Task<CardApiResponse> DeleteUserCardAsync(string email, string cardId)
+    {
+        var user = await userRepository.GetUserByEmailAsync(email);
+        if (user == null)
+        {
+            return new CardApiResponse(404, false, "User not found.");
+        }
+        var cardToDelete = user.Cards?.FirstOrDefault(c => c.Id == cardId);
+        if (cardToDelete == null)
+        {
+            return new CardApiResponse(404, false, "Card not found.");
+        }
+        user.Cards?.Remove(cardToDelete);
+        await userRepository.UpdateUserAsync(user);
+        return new CardApiResponse(200, true, "Card deleted successfully.");
+    }
+
+    public async Task<CardListApiResponse> GetUserCardsAsync(string email)
+    {
+        var user = await userRepository.GetUserByEmailAsync(email);
+        if (user == null)
+        {
+            return new CardListApiResponse(404, false, "User not found.");
+        }
+        return new CardListApiResponse(200, true, "Cards retrieved successfully.", user.Cards ?? new List<Card>());
+    }
+
+    private static bool ValidateCardDetails(UpdateCardRequest cardRequest)
+    {
+        return !string.IsNullOrWhiteSpace(cardRequest.CardNumber) &&
+               !string.IsNullOrWhiteSpace(cardRequest.CardholderName) &&
+               !string.IsNullOrWhiteSpace(cardRequest.ExpiryDate) &&
+               !string.IsNullOrWhiteSpace(cardRequest.CVV);
+    }
+
+    private async Task UnsetOtherDefaultCards(string userId, string exceptCardId)
+    {
+        var user = await userRepository.GetUserByIdAsync(userId);
+        if (user?.Cards != null)
+        {
+            foreach (var card in user.Cards.Where(c => c.Id != exceptCardId))
+            {
+                card.IsDefault = false;
+            }
+            await userRepository.UpdateUserAsync(user);
+        }
     }
 
     private static string GenerateRefreshToken()
