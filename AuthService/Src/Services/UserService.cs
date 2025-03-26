@@ -103,6 +103,10 @@ public class UserService(IUserRepository userRepository, IJwtService jwtService)
             user.Name = model.Name;
         if (!string.IsNullOrEmpty(model.ProfilePictureUrl))
             user.ProfilePicture = model.ProfilePictureUrl;
+        if (!string.IsNullOrEmpty(model.PhoneNumber))
+            user.PhoneNumber = model.PhoneNumber;
+        if (!string.IsNullOrEmpty(model.Address))
+            user.Address = model.Address;
         await userRepository.UpdateUserAsync(user);
         return new UserApiResponse(200, true, "User details updated successfully.", user);
     }
