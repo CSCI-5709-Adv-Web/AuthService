@@ -17,8 +17,8 @@ spec:
           image: jashpatel1511/web-auth-service:latest
           volumeMounts:
             - name: appsettings-volume
-              mountPath: /appsettings.json  # Mount path inside the container
-              subPath: appsettings.json    # Name of the file inside the container
+              mountPath: /appsettings.json # Mount path inside the container
+              subPath: appsettings.json # Name of the file inside the container
           resources:
             requests:
               memory: "128Mi"
@@ -29,7 +29,7 @@ spec:
       volumes:
         - name: appsettings-volume
           configMap:
-            name: authservice-configmap  # The name of the ConfigMap created
+            name: authservice-configmap # The name of the ConfigMap created
 ---
 apiVersion: v1
 kind: Service
@@ -47,3 +47,4 @@ spec:
       targetPort: 8080
       name: http
   type: LoadBalancer
+  #
