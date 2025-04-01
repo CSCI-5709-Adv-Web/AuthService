@@ -12,6 +12,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 builder.Services.AddApplicationServices(builder.Configuration);
 var app = builder.Build();
+app.UsePathBase("/auth");
 app.UseSerilogRequestLogging();
 app.UseCors("AllowAll");
 app.UseIdentityServer();

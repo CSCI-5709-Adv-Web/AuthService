@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 namespace AuthService.Controllers;
 
 [ApiController]
-[Route("api/auth")]
+[Route("auth")]
 public class AuthController(IUserService userService) : ControllerBase
 {
     [HttpPost("register")]
