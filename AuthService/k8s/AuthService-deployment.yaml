@@ -15,6 +15,8 @@ spec:
       containers:
         - name: auth-api
           image: jashpatel1511/web-auth-service:latest
+          ports:
+            - containerPort: 5173
           volumeMounts:
             - name: appsettings-volume
               mountPath: /appsettings.json # Mount path inside the container
@@ -44,7 +46,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 5173
       name: http
   type: LoadBalancer
   #
